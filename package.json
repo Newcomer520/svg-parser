@@ -1,0 +1,29 @@
+{
+  "name": "svg-parser",
+  "version": "0.1.0",
+  "description": "Parse SVG for custom usage",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "svg",
+    "jsx",
+    "parse"
+  ],
+  "author": "I-Lun",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp-rename": "^1.2.0",
+  },
+  "dependencies": {
+    "filesize": "^3.0.1",
+    "graceful-fs": "^3.0.5",    
+    "gulp-util": "^3.0.2",
+    "jsonfile": "^2.0.0",
+    "map-stream": "0.0.5",
+    "object-assign": "^2.0.0",
+    "temp-write": "^1.1.0",
+    "xml2js": "^0.4.4"
+  }
+}
