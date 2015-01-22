@@ -1,8 +1,8 @@
 {
   "name": "svg-parser",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Parse SVG for custom usage",
-  "main": "index.js",
+  "main": "index.jsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
