@@ -14,7 +14,7 @@
   "author": "I-Lun",
   "license": "ISC",
   "devDependencies": {
-    "gulp-rename": "^1.2.0",
+    "gulp-rename": "^1.2.0"
   },
   "dependencies": {
     "filesize": "^3.0.1",
