@@ -3,6 +3,7 @@ var inipWidget = require('inip-widget');
 var Group = inipWidget.utils.ART.Group;
 var Shape = inipWidget.utils.ART.Shape;
 var Rect = inipWidget.utils.Rectangle;
+var Transform = inipWidget.utils.ART.Transform;
 
 var assign = require('object-assign');
 var LinearGradientTransform = inipWidget.LinearGradientTransform;
@@ -39,13 +40,14 @@ function generateNodes(node, tag, result, key) {
 				return;
 			var grandChildren = [];
 			var k = key + '-' + idx;			
-			console.log(child)
 			resolveStyle(child.style);
 			props2React(child);
-			var xy = resolveTransform(child);
-			if(xy) {
+			
+			var transformNeeded = resolveTransform(child);
+			if(transformNeeded) {
+				console.log(child.transform)
 				result.push(
-					<Group x={xy.x} y={xy.y}>
+					<Group transform={child.transform}>
 						<Element {...child} {...child.style} key={k}>
 							{grandChildren}
 						</Element>
@@ -64,11 +66,14 @@ function generateNodes(node, tag, result, key) {
 		});
 	}
 	else if(typeof node === 'object') {
+		var k = key + '-';
+		var idx = 0;
 		for(var prop in node) {
+			k = k + (idx++);
 			//prevent from making multiple tags.			
 			if(RECOGNIZED_ELEMENTS[prop]) {			
-				generateNodes(node[prop], prop, result, key);
-				break;
+				generateNodes(node[prop], prop, result, k);
+				//break;
 			}
 		}
 	}
@@ -98,6 +103,7 @@ function resolveStyle(style) {
 }
 
 var MATCHED_TRANSLATE_IN_TRANSFORM = /^translate\((.*)\)/;
+var MATCHED_MATRIX_IN_TRANSFORM = /^matrix\((.*)\)/;
 function resolveTransform(node) {
 	if(!node.transform)
 		return;
@@ -113,10 +119,25 @@ function resolveTransform(node) {
 	//translate.
 	if(matched = MATCHED_TRANSLATE_IN_TRANSFORM.exec(node.transform)) {
 		var strtmps = matched[1].split(',');
-		if(strtmps.length != 2)
-			return;
-		return {x:parseFloat(strtmps[0]), y: parseFloat(strtmps[1])};
+		if (strtmps.length < 2)
+			return false;
+		if(strtmps.length == 2)
+			node.transform = new Transform().initialize(parseFloat(strtmps[0]),0,0,0,0,parseFloat(strtmps[1]));
+		return true;
 	}
+	else if(matched = MATCHED_MATRIX_IN_TRANSFORM.exec(node.transform)) {
+		var strtmps = matched[1].split(',');
+		if  (strtmps.length != 6)
+			return false;
+		var a = [];
+		strtmps.forEach(function(s) {
+			a.push(parseFloat(s));
+		});
+		console.log(a)
+		node.transform = new Transform().initialize(a[0],a[1],a[2],a[3],a[4],a[5]);
+		return true;
+	}
+
 	return undefined;
 }
 /*
